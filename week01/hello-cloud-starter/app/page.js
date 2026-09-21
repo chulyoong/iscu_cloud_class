@@ -64,6 +64,7 @@ try {
 } finally {
   setIsLoading(false);
 }
+  }
 
   return (
     <main className="page-shell">
