@@ -8,7 +8,11 @@ export async function GET(request, { params }) {
   // TODO
   // originalUrl이 존재하지 않는 경우
   // 404 Not Found 응답을 반환하세요.
-
+if (!originalUrl) {
+  return new Response("Not Found", {
+    status: 404,
+  });
+}
 
   return new Response(null, {
     status: 307,
