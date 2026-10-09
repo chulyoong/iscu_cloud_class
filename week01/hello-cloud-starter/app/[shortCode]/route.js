@@ -1,4 +1,5 @@
 import { findUrlByShortCode } from "../../lib/db";
+import { recordClick } from "../../lib/stats";
 
 export async function GET(request, { params }) {
   const { shortCode } = await params;
@@ -9,16 +10,25 @@ export async function GET(request, { params }) {
   // originalUrl이 존재하지 않는 경우
   // 404 Not Found 응답을 반환하세요.
 if (!originalUrl) {
-  return new Response("", {
+  console.warn("Short URL not found", { shortCode });
+  return new Response("Not Found", {
     status: 404
   });
 }
+// 원본 URL이 존재하는 경우 클릭 수를 기록
+try {
+  await recordClick(shortCode);
+} catch (error) {
+  console.error("Failed to record click", { shortCode });
+}
 
+// 원본 URL로 Redirect하고 307 반환
   return new Response(null, {
     status: 307,
     headers: {
       Location: originalUrl,
-      "Cache-Control": "no-store",
-    },
+      "Cache-Control": "no-store", },
   });
+
+  
 }
