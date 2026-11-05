@@ -156,7 +156,25 @@ export async function POST(request) {
       );
     }
 
+/*
+ * 자기 서비스 URL 단축 차단
+ *
+ * 입력된 URL의 호스트가 현재 서비스와 같으면
+ * 단축 요청을 거부합니다.
+ */
+const serviceUrl = new URL(request.url);
 
+if (parsedUrl.hostname.toLowerCase() === serviceUrl.hostname.toLowerCase()) {
+  return NextResponse.json(
+    {
+      error: {
+        code: "INVALID_URL",
+        message: "Cannot shorten this service URL.",
+      },
+    },
+    { status: 400 }
+  );
+}
     /*
      * 6. Short URL 생성
      *

@@ -6,6 +6,7 @@ export async function saveUrl(shortCode, originalUrl) {
   await sql`
     INSERT INTO urls (short_code, original_url)
     VALUES (${shortCode}, ${originalUrl})
+    ON CONFLICT (short_code) DO NOTHING
   `;
 }
 export async function findUrlByShortCode(shortCode) {
